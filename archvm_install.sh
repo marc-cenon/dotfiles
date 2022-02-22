@@ -1,5 +1,7 @@
 #! /bin/bash
 
+### export package list as variable
+package_list="$(cat package_list.txt)"
 sudo pacman -Syyuu
 
 echo "install vm needed packages"
@@ -27,6 +29,10 @@ done
 ### COPYING .CONFING FOLDER
 echo "copying .confing folder"
 cp -r config $HOME/.config/
+
+### OH MY ZSH
+echo "installing oh my zsh"
+sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
 
 ### copying ZSH conf
 cp .zshrc $HOME

@@ -77,5 +77,14 @@ rofi-emoji
 roficlip
 picom-jonaburg-git
 polybar
+lxappearance
+gdm-tools
 #### fonts #### 
 nerd-fonts-complete
+### xorg ###
+xorg
+xorg-server
+xorg-apps
+xorg-xinit
+### gdm ###
+gdm
