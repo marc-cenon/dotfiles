@@ -111,18 +111,21 @@ keys = [
 Key([mod], "space", lazy.spawn("rofi -combi-modi drun -font 'Source Code Pro 20' -show drun -icon-theme 'Papirus' -show-icons")),
 
     # Volume controls
-    Key([mod], "Up", lazy.spawn('pactl set-sink-volume 0 +5%')),
-    Key([mod], "Down", lazy.spawn('pactl set-sink-volume 0 -5%')),
+    Key([mod], "u", lazy.spawn('pactl set-sink-volume 0 +5%')),
+    Key([mod], "y", lazy.spawn('pactl set-sink-volume 0 -5%')),
 
     # Media controls
     #Key([mod], "ç", lazy.spawn('playerctl previous')),
     #Key([mod], "à", lazy.spawn('playerctl next')),
 
     # Emoji Rofi launcher
-    Key([mod], "o", lazy.spawn('rofi -show emoji -modi emoji')),
+    #Key([mod], "o", lazy.spawn('rofi -show emoji -modi emoji')),
 
     # Discord
-    Key([mod], "n", lazy.spawn("discord")),
+    Key([mod], "d", lazy.spawn("discord")),
+
+    # NAUTILUS
+    Key([mod], "n", lazy.spawn(file_manager)),
 
     # Browser
     Key([mod], "b", lazy.spawn(browser)),
