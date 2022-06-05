@@ -10,7 +10,6 @@ from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
 from colors import Colors
-from Xlib import display as xdisplay
 
 import subprocess
 import os
@@ -23,21 +22,14 @@ def start():
 
 
 mod = "mod1"
-terminal = "kitty"
+terminal = "alacritty"
 browser = "google-chrome-stable"
 file_manager = "nautilus"
 
-# setup for more than 3 screens
-#def get_monitors():
-#    xr = subprocess.check_output('xrandr --query | grep " connected"', shell=True).decode().split('\n')
-#    monitors = len(xr) - 1 if len(xr) > 2 else len(xr)
-#    return monitors
-# Move window to screen with Mod, Alt and number
-#for i in range(monitors):
-#    keys.extend([
-#        Key([mod, "space"], str(i+1), lazy.window.toscreen(i)),
-#    keys.extend([Key([mod, "z"], str(i+1), lazy.window.toscreen(i))]),
-#   ])
+#################################
+########### SCREENS #############
+#################################
+
 def window_to_previous_screen(qtile, switch_group=False, switch_screen=False):
     i = qtile.screens.index(qtile.current_screen)
     if i != 0:
@@ -54,18 +46,20 @@ def window_to_next_screen(qtile, switch_group=False, switch_screen=False):
         if switch_screen == True:
             qtile.cmd_to_screen(i + 1)
 
-    #Key([mod,"shift"],"i",  lazy.function(window_to_next_screen, switch_screen=True)),
-    #Key([mod,"shift"],"o", lazy.function(window_to_previous_screen, switch_screen=True)),
+
+#################################
+###########  KEYS  ##############
+#################################
 
 keys = [
 
-        # Switch between windows
+    ######## Switch between windows
     Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
     Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
     Key([mod], "j", lazy.layout.down(), desc="Move focus down"),
     Key([mod], "k", lazy.layout.up(), desc="Move focus up"),
 
-    # Move windows
+    ######## Move windows
     Key([mod, "shift"], "h", lazy.layout.shuffle_left(), desc="Move window to the left"),
     Key([mod, "shift"], "l", lazy.layout.shuffle_right(), desc="Move window to the right"),
     Key([mod, "shift"], "j", lazy.layout.shuffle_down(), desc="Move window down"),
@@ -75,42 +69,40 @@ keys = [
     #Key([mod], "d",lazy.to_screen(0), desc='Keyboard focus to monitor 1'),
     #Key([mod], "s",lazy.to_screen(1), desc='Keyboard focus to monitor 2'),
 
-    ### Switch focus of monitors
+    ######## Switch focus of monitors
     Key([mod], "i",lazy.next_screen(), desc='Move focus to next monitor'),
     Key([mod], "o",lazy.prev_screen(), desc='Move focus to prev monitor'),
 
-    # Switch active window to another screen
-    #Key([mod,"control"], "i",  lazy.function(window_to_next_screen)),    
-    #Key([mod,"control"], "o", lazy.function(window_to_previous_screen)),
+    ######## Switch active window to another screen
     Key([mod,"control"],"i",  lazy.function(window_to_next_screen, switch_screen=True)),
     Key([mod,"control"],"o", lazy.function(window_to_previous_screen, switch_screen=True)),
 
-    # Resize Windows
+    ######## Resize Windows
     Key([mod, "control"], "h", lazy.layout.grow_left(), desc="Grow window to the left"),
     Key([mod, "control"], "l", lazy.layout.grow_right(), desc="Grow window to the right"),
     Key([mod, "control"], "j", lazy.layout.grow_down(), desc="Grow window down"),
     Key([mod, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
     Key([mod], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
 
-    # Toggle floating
+    ######## Toggle floating
     Key([mod], "f", lazy.window.toggle_floating()),
     Key([mod, "shift"], "Return", lazy.layout.toggle_split(), desc="Toggle between split and unsplit sides of stack"),
 
-    # Terminal
+    ######## Terminal
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
 
-    # Toggle between different layouts as defined below
+    ######## Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
     Key([mod], "w", lazy.window.kill(), desc="Kill focused window"),
 
-    # Shutdown/Restart Qtile
+    ######## Shutdown/Restart Qtile
     Key([mod, "control"], "r", lazy.restart(), desc="Restart Qtile"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
 
-    # Rofi apps launcher
-Key([mod], "space", lazy.spawn("rofi -combi-modi drun -font 'Source Code Pro 20' -show drun -icon-theme 'Papirus' -show-icons")),
+    ######## Rofi apps launcher
+    Key([mod], "space", lazy.spawn("rofi -combi-modi drun -font 'Source Code Pro 20' -show drun -icon-theme 'Papirus' -show-icons")),
 
-    # Volume controls
+    ######## Volume controls
     Key([mod], "u", lazy.spawn('pactl set-sink-volume 0 +5%')),
     Key([mod], "y", lazy.spawn('pactl set-sink-volume 0 -5%')),
 
@@ -121,28 +113,26 @@ Key([mod], "space", lazy.spawn("rofi -combi-modi drun -font 'Source Code Pro 20'
     # Emoji Rofi launcher
     #Key([mod], "o", lazy.spawn('rofi -show emoji -modi emoji')),
 
-    # Discord
+    ######## Discord
     Key([mod], "d", lazy.spawn("discord")),
 
-    # NAUTILUS
+    ######## Nautilus
     Key([mod], "n", lazy.spawn(file_manager)),
 
-    # Browser
+    ######## Browser
     Key([mod], "b", lazy.spawn(browser)),
 ]
 
 groups = []
 
-# FOR AZERTY KEYBOARDS
-        #group_names = ["ampersand", "eacute", "quotedbl", "apostrophe", "parenleft", "minus", "egrave", "underbar", "ccedilla", "agrave",]
-        #group_labels = ["1 ", "2 ", "3 ", "4 ", "5 ", "6 ", "7 ", "8 ", "9 ", "0",]
+######### FOR AZERTY KEYBOARDS
+#group_names = ["ampersand", "eacute", "quotedbl", "apostrophe", "parenleft", "minus", "egrave", "underbar", "ccedilla", "agrave",]
+#group_labels = ["1 ", "2 ", "3 ", "4 ", "5 ", "6 ", "7 ", "8 ", "9 ", "0",]
+#group_layouts = ["monadtall", "matrix", "monadtall", "bsp", "monadtall", "matrix", "monadtall", "bsp", "monadtall", "monadtall",]
 
 group_names = ["ampersand", "eacute", "quotedbl", "apostrophe", "parenleft", "minus",]
-
 group_labels = ["1", "2", "3", "4", "5", "6",]
-
 group_layouts = ["monadtall", "monadtall", "monadtall", "monadtall", "monadtall", "monadtall",]
-#group_layouts = ["monadtall", "matrix", "monadtall", "bsp", "monadtall", "matrix", "monadtall", "bsp", "monadtall", "monadtall",]
 
 for i in range(len(group_names)):
     groups.append(
@@ -155,8 +145,7 @@ for i in range(len(group_names)):
 for i in groups:
     keys.extend([
 
-
-        # CHANGE WORKSPACES
+        ######## CHANGE WORKSPACES
         Key([mod], i.name, lazy.group[i.name].toscreen()),
         Key([mod], "Tab", lazy.screen.next_group()),
         Key([mod, "shift"], "Tab", lazy.screen.prev_group()),
@@ -164,8 +153,30 @@ for i in groups:
             i.name), lazy.group[i.name].toscreen()),
     ])
 
-
+###########################
+######### COLORS ##########
+###########################
+catppuccin = {
+    "flamingo": "#F2CDCD",
+    "mauve": "#DDB6F2",
+    "pink": "#F5C2E7",
+    "maroon": "#E8A2AF",
+    "red": "#F28FAD",
+    "peach": "#F8BD96",
+    "yellow": "#FAE3B0",
+    "green": "#ABE9B3",
+    "teal": "#B5E8E0",
+    "blue": "92CDFB",
+    "sky": "#89DCEB",
+    "white": "#D9E0EE",
+    "gray0": "#6E6C7E",
+    "black1": "#1A1826",
+    }
 palette = Colors()
+
+###########################
+####### BAR LAYOUT ########
+###########################
 
 layouts = [
     layout.Columns(border_focus="B2BEB5",
@@ -192,17 +203,23 @@ screens = [
                     fontsize=20,
                     padding_x=8,
                     borderwidth=0,
-                    active=palette.WHITE,
-                    inactive=palette.WHITE,
+                    active=catppuccin["pink"],
+                    #active=palette.WHITE,
+                    inactive=catppuccin["pink"],
+                    #inactive=palette.WHITE,
                     rounded=True,
                     font="Source Code Pro",
                     highlight_method="block",
-                    highlight_color=palette.DARK,
+                    highlight_color=catppuccin["black1"],
+                    #highlight_color=palette.DARK,
                     block_highlight_text_color=palette.WHITE,
                     this_current_screen_border=palette.SECONDARY,
-                    foreground=palette.DARK,
-                    background=palette.DARK,
-                    hide_unused=True
+                    foreground=catppuccin["black1"],
+                    #foreground=palette.DARK,
+                    background=catppuccin["black1"],
+                    #background=palette.DARK,
+                    #hide_unused=True
+                    hide_unused=False
                 ),
                 widget.Spacer(),
                 widget.WindowName(
@@ -228,7 +245,8 @@ screens = [
             ],
             35,
             margin=[10, 10, 0, 10],
-            background=palette.DARK,
+            background=catppuccin["black1"],
+            #background=palette.DARK,
             opacity=1,
         ),
     ),
@@ -272,3 +290,4 @@ auto_fullscreen = True
 focus_on_window_activation = "smart"
 
 wmname = "LG3D"
+reconfigure_screens = True

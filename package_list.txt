@@ -1,6 +1,13 @@
 #### audio #### 
-pipewire
-pipewire-pulse
+alsa-control
+alsa-firmware
+alsa-utils
+alsa-utils 
+alsa-plugins 
+pulseaudio 
+pulseaudio-alsa 
+pulseaudio-bluetooth 
+pulseaudio-equalizer 
 pavucontrol
 #### gtk and theming #### 
 nordic-darker-theme
@@ -18,6 +25,7 @@ binutils
 bpytop
 cronie
 dbus-python
+python-dbus-next
 dhcpcd
 exa
 exfat-utils
@@ -25,6 +33,7 @@ gcc
 git
 htop
 kitty
+alacritty
 make
 go
 network-manager-applet
@@ -49,6 +58,7 @@ clipit
 discord
 gedit
 libreoffice-fresh
+google-chrome
 playerctl
 scrcpy
 vlc
