@@ -1,0 +1,8 @@
+1- install arandr
+2- save arandr setup to a shell script
+3- source shell script
+
+-----
+I3LOCK
+1- installer imagemagick
+2- convert jpg -> png (commande convert int out)

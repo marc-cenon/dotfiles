@@ -1,0 +1,35 @@
+#------------
+# PYENV
+#------------
+
+PYENV: gérer plusieurs versions de python, changer la version global, mettre une version local a un projet,
+gerer les virtualenv
+
+    pyenv install --list to see the available Python versions you can install.
+    pyenv versions to see the installed Python versions.
+    pyenv global <Python version> to set an installed Python version as global.
+    pyenv local <Python version> to set an installed Python version for a given project folder.
+    pyenv uninstall <Python version> to uninstall an already installed Python version
+	
+	
+#------------
+# PIPENV
+#------------
+	
+PIPENV: sert à gérer les paquets dans un projet python, creer un venv, ...
+    Pipfile: A file that specifies the installed packages in your virtual environment for development and execution.
+    Pipfile.lock: A file that specifies which versions of the installed packages (detailed in the Pipfile) has to be used. Also has another important metadata.
+	
+    pipenv sync install dependencies from pipfile without changing Pipfile.lock (unlocking and changing version of a package)
+	pipenv install to create a virtual environment.
+    pipenv install --python <Python version> to create a virtual environment indicating the desired Python version (that you have installed using Pyenv).
+    pipenv --rm to delete the current virtual environment.
+    pipenv shell to activate the created virtual environment.
+    exit to deactivate an already activated virtual environment.
+	
+
+    pipenv install <package name> to install the latest version of the package under the [packages] section.
+    pipenv install <package name>==<package version> to install a specified version of a package, under the [packages] section.
+    pipenv update <package name> to update a version of a package(upgrade or downgrade) to the one that you have previously specified in the Pipfile.
+    Adding --dev to the previous commands, Pipenv will do the same but under the [dev-packages] section.
+    pipenv uninstall <package name> to uninstall a package.

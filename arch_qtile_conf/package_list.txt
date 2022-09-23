@@ -1,0 +1,91 @@
+#### audio #### 
+alsa-control
+alsa-firmware
+alsa-utils
+alsa-utils 
+alsa-plugins 
+pulseaudio 
+pulseaudio-alsa 
+pulseaudio-bluetooth 
+pulseaudio-equalizer 
+pavucontrol
+#### gtk and theming #### 
+nordic-darker-theme
+catppuccin-gtk-theme
+tela-icon-theme
+xdg-user-dirs-gtk
+xdg-user-dirs
+#### system #### 
+aura-bin
+autoconf
+automake
+base
+base-devel 
+binutils
+bpytop
+cronie
+dbus-python
+python-dbus-next
+dhcpcd
+exa
+exfat-utils
+gcc
+git
+htop
+kitty
+alacritty
+make
+go
+network-manager-applet
+networkmanager
+ntfs-3g
+openjdk-src
+pkgconf
+python-pip
+sxhkd
+tmux
+vim
+wget
+zsh
+zsh-completions 
+openssh 
+inetutils
+keychain
+#### misc #### 
+gimp
+cheese
+clipit
+discord
+gedit
+libreoffice-fresh
+google-chrome
+playerctl
+scrcpy
+vlc
+zathura
+zathura-pdf-mupdf
+#### devops #### 
+docker
+docker-compose
+ansible
+terraform
+#### ricing #### 
+dunst
+gdm
+pfetch
+nitrogen
+qtile
+rofi
+rofi-emoji
+roficlip
+picom-jonaburg-git
+polybar
+lxappearance
+gdm-tools
+#### fonts #### 
+nerd-fonts-complete
+### xorg ###
+xorg
+xorg-server
+xorg-apps
+xorg-xinit

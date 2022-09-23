@@ -1,0 +1,41 @@
+==== DRACULA TTY COLOR SCHEME ====
+> put this in the .zshrc file
+echo -en \\e]P0282a36
+echo -en \\e]P86272a4
+echo -en \\e]P1ff5555
+echo -en \\e]P9ff7777
+echo -en \\e]P250fa7b
+echo -en \\e]PA70fa9b
+echo -en \\e]P3f1fa8c
+echo -en \\e]PBffb86c
+echo -en \\e]P4bd93f9
+echo -en \\e]PCcfa9ff
+echo -en \\e]P5ff79c6
+echo -en \\e]PDff88e8
+echo -en \\e]P68be9fd
+echo -en \\e]PE97e2ff
+echo -en \\e]P7f8f8f2
+echo -en \\e]PFfffff
+clear
+
+==== NORD TTY COLOR SCHEME ====
+> put this in the .zshrc file
+# nord-vconsole
+# vconsole colors set printing \\e]PXRRGGBB
+# where X is terminal color, RRGGBB is a hexcolor
+echo -en \\e]P02E3440
+echo -en \\e]P1BF616A
+echo -en \\e]P2A3BE8C
+echo -en \\e]P3EBCB8B
+echo -en \\e]P481A1C1
+echo -en \\e]P5B48EAD
+echo -en \\e]P688C0D0
+echo -en \\e]P7E5E9F0
+echo -en \\e]P84C566A
+echo -en \\e]P9BF616A
+echo -en \\e]PAA3BE8C
+echo -en \\e]PBEBCB8B
+echo -en \\e]PCB48EAD
+echo -en \\e]PD8FBCBB
+echo -en \\e]PEECEFF4
+clear
