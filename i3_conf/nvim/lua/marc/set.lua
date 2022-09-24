@@ -1,4 +1,5 @@
--- general configuration
+
+--------------------------- global nvm conf
 local opt = vim.opt
 
 opt.termguicolors = true

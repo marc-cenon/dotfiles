@@ -1,7 +1,4 @@
-local status, ts = pcall(require, "nvim-treesitter.configs")
-if (not status) then return end
-
-ts.setup {
+require'nvim-treesitter.configs'.setup {
   ensure_installed = { 
     "python", 
     "lua", 

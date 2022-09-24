@@ -1,15 +1,18 @@
--- Bootstrat packer
-local ensure_packer = function()
-  local fn = vim.fn
-  local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
-  if fn.empty(fn.glob(install_path)) > 0 then
-    fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
-    vim.cmd [[packadd packer.nvim]]
-    return true
-  end
-  return false
+-- Automatically install packer
+local fn = vim.fn
+local install_path = fn.stdpath "data" .. "/site/pack/packer/start/packer.nvim"
+if fn.empty(fn.glob(install_path)) > 0 then
+  PACKER_BOOTSTRAP = fn.system {
+    "git",
+    "clone",
+    "--depth",
+    "1",
+    "https://github.com/wbthomason/packer.nvim",
+    install_path,
+  }
+  print "Installing packer close and reopen Neovim..."
+  vim.cmd [[packadd packer.nvim]]
 end
-local packer_bootstrap = ensure_packer()
 
 -- Autocommand that reloads neovim whenever you save the plugins.lua file
 vim.cmd [[
@@ -18,7 +21,6 @@ vim.cmd [[
     autocmd BufWritePost plugins.lua source <afile> | PackerSync
   augroup end
 ]]
-
 -- Use a protected call so we don't error out on first use
 local status_ok, packer = pcall(require, "packer")
 if not status_ok then
@@ -35,8 +37,8 @@ packer.init {
 }
 vim.cmd [[packadd packer.nvim]]
 
--- Plugins selection
-return require('packer').startup(function(use)
+-- Plugin section
+return require("packer").startup(function()
   use("wbthomason/packer.nvim")
   use("sbdchd/neoformat")
   use {
@@ -47,26 +49,32 @@ return require('packer').startup(function(use)
   use("nvim-lua/popup.nvim")
   use("nvim-telescope/telescope.nvim")
   use("ThePrimeagen/harpoon")
-  use 'nvim-treesitter/nvim-treesitter'
-  use {"folke/tokyonight.nvim", as = "tokyo" }
-  use { "catppuccin/nvim", as = "catppuccin" }
   use {
-    "williamboman/mason.nvim",
-    "williamboman/mason-lspconfig.nvim",
-    "neovim/nvim-lspconfig",
+    'nvim-treesitter/nvim-treesitter',
+    run = function() require('nvim-treesitter.install').update({ with_sync = true }) end,
   }
-  use 'hrsh7th/nvim-cmp'
-  use 'hrsh7th/cmp-nvim-lsp'
-  use 'hrsh7th/cmp-path'
-  use 'hrsh7th/cmp-buffer'
-  use 'saadparwaiz1/cmp_luasnip'
-	use 'onsails/lspkind-nvim'
-  use 'L3MON4D3/LuaSnip'
-	use 'williamboman/nvim-lsp-installer'
-	use 'hashivim/vim-terraform'
-  use 'simrat39/rust-tools.nvim'
+  use 'akinsho/nvim-bufferline.lua'
+  use 'kdheepak/lazygit.nvim'
+  use 'kyazdani42/nvim-web-devicons' -- File icons
+  use {
+    "windwp/nvim-autopairs",
+    config = function() require("nvim-autopairs").setup {} end
+}
 
-  if packer_bootstrap then
-    require('packer').sync()
-  end
-end)
+
+-- Colorscheme section
+  use("folke/tokyonight.nvim")
+  use { "catppuccin/nvim", as = "catppuccin" }
+
+-- LSP
+  use 'onsails/lspkind-nvim' -- vscode-like pictograms
+  use 'hrsh7th/cmp-buffer' -- nvim-cmp source for buffer words
+  use 'hrsh7th/cmp-nvim-lsp' -- nvim-cmp source for neovim's built-in LSP
+  use 'hrsh7th/nvim-cmp' -- Completion
+  use 'neovim/nvim-lspconfig' -- LSP
+  use 'jose-elias-alvarez/null-ls.nvim' -- Use Neovim as a language server to inject LSP diagnostics, code actions, and more via Lua
+  use 'MunifTanjim/prettier.nvim' -- Prettier plugin for Neovim's built-in LSP client
+  use 'williamboman/mason.nvim'
+  use 'williamboman/mason-lspconfig.nvim'
+  use 'L3MON4D3/LuaSnip'
+ end)
