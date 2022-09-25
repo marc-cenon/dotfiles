@@ -1,8 +1,8 @@
 local status, cmp = pcall(require, "cmp")
 if (not status) then return end
 
-local status2, luasnip = pcall(require "luasnip")
-if (not status) then return end
+local status2, luasnip = pcall(require, "luasnip")
+if (not status2) then return end
 
 local lspkind = require 'lspkind'
 
@@ -33,3 +33,4 @@ cmp.setup {
     { name = 'buffer' },
   }
 }
+

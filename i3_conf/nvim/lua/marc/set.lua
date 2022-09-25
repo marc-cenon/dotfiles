@@ -9,7 +9,10 @@ opt.number = true
 opt.relativenumber = true
 opt.numberwidth = 2
 
-opt.syntax = on
+opt.list = true
+opt.listchars = { tab = '│ ', eol = '↩', trail = '•', space = '⋅', precedes = '←', extends = '→' }
+
+opt.syntax = "on"
 opt.mouse = "a"
 opt.wrap = true
 

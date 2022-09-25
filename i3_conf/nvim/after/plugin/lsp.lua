@@ -1,5 +1,4 @@
 --vim.lsp.set_log_level("debug")
-
 local status, nvim_lsp = pcall(require, "lspconfig")
 if (not status) then return end
 
@@ -22,6 +21,7 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
   --buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
   buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+  buf_set_keymap('n', 'ga', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
   --buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
 end
 
