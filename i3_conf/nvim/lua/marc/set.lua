@@ -1,6 +1,14 @@
 
 --------------------------- global nvm conf
+vim.api.nvim_set_option("clipboard","unnamed")
+
+
 local opt = vim.opt
+
+opt.swapfile = false
+opt.backup = false
+opt.undofile = true
+opt.guicursor = ""
 
 opt.termguicolors = true
 opt.ruler = true
@@ -42,4 +50,3 @@ opt.cmdheight = 1
 opt.autoindent = true
 opt.smartindent = true
 
-vim.g.mapleader = " "

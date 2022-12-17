@@ -1,7 +1,7 @@
-function map(mode, shortcut, command)
+function Map(mode, shortcut, command)
   vim.api.nvim_set_keymap(mode, shortcut, command, { noremap = true, silent = true })
 end
-map('', '<leader>f', ':Telescope find_files<CR>')
-map('', '<leader>g', ':Telescope live_grep<CR>')
-map('', '<leader>tb', ':Telescope buffers<CR>')
-map('', '<leader>tm', ':Telescope harpoon marks<CR>')
+Map('', '<leader>f', ':Telescope find_files<CR>')
+Map('', '<leader>g', ':Telescope live_grep<CR>')
+Map('', '<leader>tb', ':Telescope buffers<CR>')
+Map('', '<leader>tm', ':Telescope harpoon marks<CR>')

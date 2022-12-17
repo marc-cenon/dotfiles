@@ -1,14 +1,14 @@
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = { 
-    "python", 
-    "lua", 
-    "bash", 
-    "dockerfile", 
-    "go", 
-    "hcl", 
-    "json", 
-    "sql", 
-    "yaml", 
+  ensure_installed = {
+    "python",
+    "lua",
+    "bash",
+    "dockerfile",
+    "go",
+    "hcl",
+    "json",
+    "sql",
+    "yaml",
   },
   auto_install = true,
   highlight = {
