@@ -9,23 +9,59 @@ from libqtile import bar, layout, widget, hook
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from colors import Colors
-
+from Xlib import display as xdisplay
 import subprocess
 import os
 
-
+####################################
+## start programs from bashscript ##
+####################################
 @hook.subscribe.startup
+
 def start():
     home = os.path.expanduser('~')
     subprocess.call([home + '/.config/qtile/autostart.sh'])
 
+#####################
+## basic variables ##
+#####################
 
 mod = "mod1"
 terminal = "kitty"
 browser = "google-chrome-stable"
 file_manager = "nemo"
 
-# setup for more than 3 screens
+###########################################
+##    get number of monitor dynamically  ##
+##       need python-xlib to work        ##
+###########################################
+
+def get_num_monitors():
+    num_monitors = 0
+    try:
+        display = xdisplay.Display()
+        screen = display.screen()
+        resources = screen.root.xrandr_get_screen_resources()
+
+        for output in resources.outputs:
+            monitor = display.xrandr_get_output_info(output, resources.config_timestamp)
+            preferred = False
+            if hasattr(monitor, "preferred"):
+                preferred = monitor.preferred
+            elif hasattr(monitor, "num_preferred"):
+                preferred = monitor.num_preferred
+            if preferred:
+                num_monitors += 1
+    except Exception as e:
+        # always setup at least one monitor
+        return 1
+    else:
+        return num_monitors
+
+num_monitors = get_num_monitors()
+
+# alternative setup for 3 monitor& 
+
 #def get_monitors():
 #    xr = subprocess.check_output('xrandr --query | grep " connected"', shell=True).decode().split('\n')
 #    monitors = len(xr) - 1 if len(xr) > 2 else len(xr)
@@ -36,6 +72,11 @@ file_manager = "nemo"
 #        Key([mod, "space"], str(i+1), lazy.window.toscreen(i)),
 #    keys.extend([Key([mod, "z"], str(i+1), lazy.window.toscreen(i))]),
 #   ])
+
+#####################################
+## setup for for switching monitor ##
+#####################################
+
 def window_to_previous_screen(qtile, switch_group=False, switch_screen=False):
     i = qtile.screens.index(qtile.current_screen)
     if i != 0:
@@ -52,12 +93,17 @@ def window_to_next_screen(qtile, switch_group=False, switch_screen=False):
         if switch_screen == True:
             qtile.cmd_to_screen(i + 1)
 
-    #Key([mod,"shift"],"i",  lazy.function(window_to_next_screen, switch_screen=True)),
-    #Key([mod,"shift"],"o", lazy.function(window_to_previous_screen, switch_screen=True)),
+def back_and_forth(qtile):
+    qtile.current_screen.set_group(qtile.current_screen.previous_group)
+
+
+##############
+## bindings ##
+##############
 
 keys = [
 
-        # Switch between windows
+    # Switch between windows
     Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
     Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
     Key([mod], "j", lazy.layout.down(), desc="Move focus down"),
@@ -83,6 +129,9 @@ keys = [
     Key([mod,"control"],"i",  lazy.function(window_to_next_screen, switch_screen=True)),
     Key([mod,"control"],"o", lazy.function(window_to_previous_screen, switch_screen=True)),
 
+    # Back and forth
+    Key([mod],"Tab", lazy.function(back_and_forth)),
+
     # Resize Windows
     Key([mod, "control"], "h", lazy.layout.grow_left(), desc="Grow window to the left"),
     Key([mod, "control"], "l", lazy.layout.grow_right(), desc="Grow window to the right"),
@@ -97,8 +146,7 @@ keys = [
     # Terminal
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
 
-    # Toggle between different layouts as defined below
-    Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
+    # kill window
     Key([mod], "q", lazy.window.kill(), desc="Kill focused window"),
 
     # Shutdown/Restart Qtile
@@ -106,9 +154,7 @@ keys = [
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
 
     # Rofi apps launcher
-    #Key([mod], "space", lazy.spawn("rofi -combi-modi drun -font 'Source Code Pro 20' -show drun -icon-theme 'Papirus' -show-icons")),
     Key([mod], "space", lazy.spawn("rofi -show-icons -location 0 -show drun -sidebar-mode -columns")),
-
 
     # Volume controls
     Key([mod], "u", lazy.spawn('pactl set-sink-volume 0 +5%')),
@@ -130,19 +176,20 @@ keys = [
     # Browser
     Key([mod], "b", lazy.spawn(browser)),
 ]
+###################
+## groups config ##
+###################
 
 groups = []
 
-# FOR AZERTY KEYBOARDS
-        #group_names = ["ampersand", "eacute", "quotedbl", "apostrophe", "parenleft", "minus", "egrave", "underbar", "ccedilla", "agrave",]
-        #group_labels = ["1 ", "2 ", "3 ", "4 ", "5 ", "6 ", "7 ", "8 ", "9 ", "0",]
+# FOR AZERTY KEYBOARDS : use xdev to get the name of the key
+#group_names = ["ampersand", "eacute", "quotedbl", "apostrophe", "parenleft", "minus", "egrave", "underscore", "ccedilla", "agrave",]
+#group_labels = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0",]
+#group_layouts = ["monadtall", "monadtall", "monadtall", "monadtall", "monadtall", "monadtall", "monadtall", "monadtall", "monadtall", "monadtall",]
 
 group_names = ["ampersand", "eacute", "quotedbl", "apostrophe", "parenleft", "minus",]
-
 group_labels = ["1", "2", "3", "4", "5", "6",]
-
 group_layouts = ["monadtall", "monadtall", "monadtall", "monadtall", "monadtall", "monadtall",]
-#group_layouts = ["monadtall", "matrix", "monadtall", "bsp", "monadtall", "matrix", "monadtall", "bsp", "monadtall", "monadtall",]
 
 for i in range(len(group_names)):
     groups.append(
@@ -154,18 +201,25 @@ for i in range(len(group_names)):
 
 for i in groups:
     keys.extend([
-
-
         # CHANGE WORKSPACES
         Key([mod], i.name, lazy.group[i.name].toscreen()),
-        Key([mod], "Tab", lazy.screen.next_group()),
-        Key([mod, "shift"], "Tab", lazy.screen.prev_group()),
+        #Key([mod], "Tab", lazy.screen.next_group()),
+        #Key([mod, "shift"], "Tab", lazy.screen.prev_group()),
         Key([mod, "shift"], i.name, lazy.window.togroup(
             i.name), lazy.group[i.name].toscreen()),
     ])
 
 
+#################
+## color setup ##
+#################
+
 palette = Colors()
+
+#######################
+## layout definition ##
+#######################
+
 layouts = [
     layout.Columns(border_focus="B2BEB5",
         border_normal="B2BEB5",
@@ -189,8 +243,8 @@ screens = [
             [
                 widget.GroupBox(
                     fontsize=20,
-                    padding_x=8,
-                    borderwidth=0,
+                    #padding_x=8,
+                    #borderwidth=0,
                     active=palette.WHITE,
                     inactive=palette.WHITE,
                     rounded=True,
@@ -208,14 +262,6 @@ screens = [
                     format='{name}'
                 ),
                 widget.Systray(),
-                widget.Mpris2(
-                            name='spotify',
-                            objname="org.mpris.MediaPlayer2.spotify",
-                            display_metadata=['xesam:title', 'xesam:artist'],
-                            scroll_chars=None,
-                            stop_pause_text='',
-                            **widget_defaults
-                        ),
                 widget.CPU(
                     format = "CPU:{load_percent}%"
                 ),
@@ -232,14 +278,53 @@ screens = [
                 widget.Clock(format='%H:%M',
                     padding=10,
                 ),
+                 widget.CurrentScreen(),
             ],
             35,
-            margin=[10, 10, 0, 10],
+            margin=[10, 10, 10, 10],
             background=palette.DARK,
             opacity=1,
         ),
     ),
 ]
+
+if num_monitors > 1:
+    for m in range(num_monitors -1):
+        screens.append(
+            Screen(
+                top=bar.Bar(
+                    [
+                        widget.GroupBox(
+                            fontsize=20,
+                            padding_x=8,
+                            borderwidth=0,
+                            active=palette.WHITE,
+                            inactive=palette.WHITE,
+                            rounded=True,
+                            font="Source Code Pro",
+                            highlight_method="block",
+                            highlight_color=palette.DARK,
+                            block_highlight_text_color=palette.WHITE,
+                            this_current_screen_border=palette.SECONDARY,
+                            foreground=palette.DARK,
+                            background=palette.DARK,
+                            hide_unused=True
+                        ),
+                        widget.Spacer(),
+                        widget.WindowName(
+                            format='{name}'
+                        ),
+                        widget.Spacer(),
+                        widget.CurrentScreen(),
+                    ],
+                    35,
+                    margin=[10, 10, 10, 10],
+                    background=palette.DARK,
+                    opacity=1,
+
+                ),
+            )
+        )
 
 mouse = [
     Drag([mod], "Button1", lazy.window.set_position_floating(),
@@ -259,18 +344,7 @@ floating_layout = layout.Floating(float_rules=[
     # Run the utility of `xprop` to see the wm class and name of an X client.
     *layout.Floating.default_float_rules,
 
-    Match(wm_class='confirmreset'),  # gitk
-    Match(wm_class='makebranch'),  # gitk
-    Match(wm_class='maketag'),  # gitk
-    Match(wm_class='ssh-askpass'),  # ssh-askpass
     Match(wm_class='zoom'),  # Zoom selector
-    Match(wm_class='coreshot'),  # gitk
-    Match(title='coreshot'),  # gitk
-    Match(title='Screenshot'),  # screenshor
-    Match(title='branchdialog'),  # gitk
-    Match(title='pinentry'),  # GPG key password entry
-    Match(title='Emoji Selector'),  # Emoji selector
-    Match(title='Zoom'),  # Emoji selector
 
 ],
     border_width=0,
@@ -278,4 +352,4 @@ floating_layout = layout.Floating(float_rules=[
 auto_fullscreen = True
 focus_on_window_activation = "smart"
 
-wmname = "LG3D"
+wmname = "Qtile"

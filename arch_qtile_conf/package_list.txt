@@ -75,6 +75,7 @@ gdm
 pfetch
 nitrogen
 qtile
+python-xlib
 rofi
 rofi-emoji
 roficlip
