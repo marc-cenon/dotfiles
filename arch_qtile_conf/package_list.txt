@@ -45,6 +45,7 @@ python-pip
 sxhkd
 tmux
 vim
+neovim
 wget
 zsh
 zsh-completions 
@@ -69,7 +70,7 @@ docker
 docker-compose
 ansible
 terraform
-#### ricing #### 
+#### ricing #### ar
 dunst
 gdm
 pfetch

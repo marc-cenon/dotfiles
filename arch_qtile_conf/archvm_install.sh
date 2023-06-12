@@ -30,15 +30,6 @@ echo "installing FUZZ"
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 ~/.fzf/install
 
-### copying ZSH conf
-cp .zshrc $HOME
-
-#### APPLYING TMUX AND VIM CONFIG
-echo "copying vimrc and tmux in $HOME "
-for file in $( ls -a | egrep 'tmux|vimrc' ); do
-  cp $file $HOME
-done
-
 ### COPYING .CONFING FOLDER
 echo "copying .confing folder"
 cp -r config $HOME/.config/
