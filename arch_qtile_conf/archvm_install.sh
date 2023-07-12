@@ -9,9 +9,9 @@ sudo pacman -S --needed base-devel --noconfirm
 
 # install packages for vm environment
 echo "install vm needed packages"
-sudo pacman -S xf86-input-vmmouse xf86-video-vmware mesa open-vm-tools
-sudo systemctl enable vmtoolsd.service
-sudo systemctl restart vmtoolsd.service
+#sudo pacman -S xf86-input-vmmouse xf86-video-vmware mesa open-vm-tools
+#sudo systemctl enable vmtoolsd.service
+#sudo systemctl restart vmtoolsd.service
 
 #### PARU INSTALL ####
 echo "installing paru"
@@ -31,5 +31,5 @@ git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 ~/.fzf/install
 
 ### COPYING .CONFING FOLDER
-echo "copying .confing folder"
-cp -r config $HOME/.config/
+#echo "copying .confing folder"
+#cp -r config $HOME/.config/
