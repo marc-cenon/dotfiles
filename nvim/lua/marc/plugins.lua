@@ -18,9 +18,6 @@ require("lazy").setup({
   { "nvim-telescope/telescope-dap.nvim" },
   -- multiple visual cursor
   { 'mg979/vim-visual-multi',                 branch = 'master' },
-  -- { "numToStr/Comment.nvim",                  opts = {} },
-  -- which-key 
-  { "folke/which-key.nvim",                   opts = {} },
   -- overide default vim.ui
   { "stevearc/dressing.nvim",                 event = "VeryLazy", opts = {} },
   -- telescope
@@ -30,6 +27,9 @@ require("lazy").setup({
     "nvim-lua/plenary.nvim"
     },
   },
+  -- buffers control
+  { 'ThePrimeagen/harpoon'},
+  -- telescope extension for file browser
   { "nvim-telescope/telescope-file-browser.nvim" },
   -- treesiter
   { 'nvim-treesitter/nvim-treesitter-context' },
@@ -102,6 +102,7 @@ require("lazy").setup({
     build = function() vim.fn["mkdp#util#install"]() end,
   },
 })
+  -- { "numToStr/Comment.nvim",                  opts = {} },
 	-- {	
 	--{ 'folke/tokyonight.nvim' },
 	-- 	"jackMort/ChatGPT.nvim",

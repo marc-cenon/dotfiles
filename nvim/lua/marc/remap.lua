@@ -1,9 +1,9 @@
 function Map(mode, lhs, rhs, opts)
-    local options = { noremap = true, silent = true }
-    if opts then
-        options = vim.tbl_extend("force", options, opts)
-    end
-    vim.keymap.set(mode, lhs, rhs, options)
+  local options = { noremap = true, silent = true }
+  if opts then
+    options = vim.tbl_extend("force", options, opts)
+  end
+  vim.keymap.set(mode, lhs, rhs, options)
 end
 
 -- leader key
@@ -41,16 +41,23 @@ Map("n", "n", "nzzzv")
 Map("n", "N", "Nzzzv")
 
 -- yank to buffer
-Map({"n", "v"}, "<leader>y", [["+y]])
+Map({ "n", "v" }, "<leader>y", [["+y]])
 Map("n", "<leader>Y", [["+Y]])
 
 --  delete to buffer
-Map({"n", "v"}, "<leader>d", [["_d]])
+Map({ "n", "v" }, "<leader>d", [["_d]])
 
 -- buffer and tabs
 Map("n", "<TAB>", ":bn<CR>")
 Map("n", "<S-TAB>", ":bp<CR>")
 Map("n", "<leader>bd", ":bd<CR>")
+
+-- harpoon
+Map('n', '<leader>hh', ':lua require("harpoon.ui").toggle_quick_menu()<CR>')
+Map('n', '<leader>ha', ':lua require("harpoon.mark").add_file()<CR>')
+Map('n', '<leader>hn', ':lua require("harpoon.ui").nav_next() <CR>')
+Map('n', '<leader>hp', ':lua require("harpoon.ui").nav_prev() <CR>')
+Map('n', '<leader>ht', ':lua require("harpoon.tmux").gotoTerminal(1)<CR>')
 
 -- telescope plugin
 Map("n", "<leader>ff", "<cmd> Telescope find_files <CR>")
@@ -61,6 +68,7 @@ Map("n", "<leader>fb", "<cmd> Telescope buffers <CR>")
 Map("n", "<leader>fh", "<cmd> Telescope help_tags <CR>")
 Map("n", "<leader>fo", "<cmd> Telescope oldfiles <CR>")
 Map("n", "<leader>fc", "<cmd> Telescope colorschemes <CR>")
+Map("n", "<leader>fh", "<cmd> Telescope harpoon marks<CR>")
 Map("n", "<leader>D", ":Telescope diagnostics<CR>")
 Map("n", "<leader>ts", ":Telescope lsp_document_symbols<CR>")
 Map("n", "<leader>tS", ":Telescope lsp_workspace_symbols<CR>")
@@ -81,3 +89,6 @@ Map('n', '<leader>zz', ":ZenMode<CR>")
 
 -- markdown preview
 Map("n", "<leader>md", ":MarkdownPreview <CR>")
+
+-- open this page in buffer
+Map("n", "<leader>h", ":e /home/marc/.config/nvim/lua/marc/remap.lua <CR>")
