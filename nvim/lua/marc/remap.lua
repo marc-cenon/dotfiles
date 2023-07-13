@@ -52,12 +52,13 @@ Map("n", "<TAB>", ":bn<CR>")
 Map("n", "<S-TAB>", ":bp<CR>")
 Map("n", "<leader>bd", ":bd<CR>")
 
--- harpoon
+-- harpoon - tmux
 Map('n', '<leader>hh', ':lua require("harpoon.ui").toggle_quick_menu()<CR>')
 Map('n', '<leader>ha', ':lua require("harpoon.mark").add_file()<CR>')
 Map('n', '<leader>hn', ':lua require("harpoon.ui").nav_next() <CR>')
 Map('n', '<leader>hp', ':lua require("harpoon.ui").nav_prev() <CR>')
 Map('n', '<leader>ht', ':lua require("harpoon.tmux").gotoTerminal(1)<CR>')
+Map('n', '<leader>tt', ':silent !tmux split-window -dh <CR>')
 
 -- telescope plugin
 Map("n", "<leader>ff", "<cmd> Telescope find_files <CR>")
