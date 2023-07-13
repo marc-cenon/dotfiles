@@ -27,6 +27,12 @@ require("lazy").setup({
     "nvim-lua/plenary.nvim"
     },
   },
+  -- nvim-tree
+  {"nvim-tree/nvim-tree.lua",
+	  dependencies = {"nvim-tree/nvim-web-devicons"},
+    cmd = "NvimTreeToggle",
+    config = true,
+  },
   -- buffers control
   { 'ThePrimeagen/harpoon'},
   -- telescope extension for file browser

@@ -62,7 +62,7 @@ Map('n', '<leader>ht', ':lua require("harpoon.tmux").gotoTerminal(1)<CR>')
 -- telescope plugin
 Map("n", "<leader>ff", "<cmd> Telescope find_files <CR>")
 Map("n", "<leader>fa", "<cmd> Telescope find_files follow=true no_ignore=true hidden=true <CR>")
-Map("n", "<leader>fe", "<cmd> Telescope file_browser <CR>")
+Map("n", "<leader>fe", "<cmd> Telescope file_browser hidden=true <CR>")
 Map("n", "<leader>fw", "<cmd> Telescope live_grep <CR>")
 Map("n", "<leader>fb", "<cmd> Telescope buffers <CR>")
 Map("n", "<leader>fh", "<cmd> Telescope help_tags <CR>")
@@ -92,3 +92,6 @@ Map("n", "<leader>md", ":MarkdownPreview <CR>")
 
 -- open this page in buffer
 Map("n", "<leader>h", ":e /home/marc/.config/nvim/lua/marc/remap.lua <CR>")
+
+-- nvim-tree toogle
+Map("n", "<leader>t", ":NvimTreeToggle <CR>")
