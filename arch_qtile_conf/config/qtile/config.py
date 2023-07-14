@@ -5,10 +5,12 @@
 # \___\_\__/_/_/\___/
 #
 from typing import List  # noqa: F401
-from libqtile import bar, layout, widget, hook
+
+from libqtile import bar, layout, widget, hook, extension
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from colors import Colors
+# this import requires python-xlib to be installed
 from Xlib import display as xdisplay
 import subprocess
 import os
@@ -29,12 +31,13 @@ def start():
 mod = "mod1"
 terminal = "kitty"
 browser = "google-chrome-stable"
-file_manager = "nemo"
+file_manager = "thunar"
 
 ###########################################
 ##    get number of monitor dynamically  ##
 ##       need python-xlib to work        ##
 ###########################################
+# https://github.com/qtile/qtile/wiki/screens
 
 def get_num_monitors():
     num_monitors = 0
@@ -42,7 +45,6 @@ def get_num_monitors():
         display = xdisplay.Display()
         screen = display.screen()
         resources = screen.root.xrandr_get_screen_resources()
-
         for output in resources.outputs:
             monitor = display.xrandr_get_output_info(output, resources.config_timestamp)
             preferred = False
@@ -60,42 +62,26 @@ def get_num_monitors():
 
 num_monitors = get_num_monitors()
 
-# alternative setup for 3 monitor& 
-
-#def get_monitors():
-#    xr = subprocess.check_output('xrandr --query | grep " connected"', shell=True).decode().split('\n')
-#    monitors = len(xr) - 1 if len(xr) > 2 else len(xr)
-#    return monitors
-# Move window to screen with Mod, Alt and number
-#for i in range(monitors):
-#    keys.extend([
-#        Key([mod, "space"], str(i+1), lazy.window.toscreen(i)),
-#    keys.extend([Key([mod, "z"], str(i+1), lazy.window.toscreen(i))]),
-#   ])
-
 #####################################
 ## setup for for switching monitor ##
 #####################################
+def cycle_workspaces(direction, move_window):
+    def _inner(qtile):
+        current = qtile.groups.index(qtile.current_group)
+        destination = (current + direction) % len(groups)
+        if move_window:
+            qtile.current_window.togroup(qtile.groups[destination].name)
+        qtile.groups[destination].cmd_toscreen()
+    return _inner
 
-def window_to_previous_screen(qtile, switch_group=False, switch_screen=False):
-    i = qtile.screens.index(qtile.current_screen)
-    if i != 0:
-        group = qtile.screens[i - 1].group.name
-        qtile.current_window.togroup(group, switch_group=switch_group)
-        if switch_screen == True:
-            qtile.cmd_to_screen(i - 1)
 
-def window_to_next_screen(qtile, switch_group=False, switch_screen=False):
-    i = qtile.screens.index(qtile.current_screen)
-    if i + 1 != len(qtile.screens):
-        group = qtile.screens[i + 1].group.name
-        qtile.current_window.togroup(group, switch_group=switch_group)
-        if switch_screen == True:
-            qtile.cmd_to_screen(i + 1)
+next_workspace = lazy.function(cycle_workspaces(direction=1, move_window=False))
+previous_workspace = lazy.function(cycle_workspaces(direction=-1, move_window=False))
+to_next_workspace = lazy.function(cycle_workspaces(direction=1, move_window=True))
+to_previous_workspace = lazy.function(cycle_workspaces(direction=-1, move_window=True))
 
 def back_and_forth(qtile):
     qtile.current_screen.set_group(qtile.current_screen.previous_group)
-
 
 ##############
 ## bindings ##
@@ -115,10 +101,6 @@ keys = [
     Key([mod, "shift"], "j", lazy.layout.shuffle_down(), desc="Move window down"),
     Key([mod, "shift"], "k", lazy.layout.shuffle_up(), desc="Move window up"),
 
-    # Switch focus to specific monitor (out of three)
-    #Key([mod], "d",lazy.to_screen(0), desc='Keyboard focus to monitor 1'),
-    #Key([mod], "s",lazy.to_screen(1), desc='Keyboard focus to monitor 2'),
-
     ### Switch focus of monitors
     Key([mod], "i",lazy.next_screen(), desc='Move focus to next monitor'),
     Key([mod], "o",lazy.prev_screen(), desc='Move focus to prev monitor'),
@@ -126,18 +108,24 @@ keys = [
     # Switch active window to another screen
     #Key([mod,"control"], "i",  lazy.function(window_to_next_screen)),    
     #Key([mod,"control"], "o", lazy.function(window_to_previous_screen)),
-    Key([mod,"control"],"i",  lazy.function(window_to_next_screen, switch_screen=True)),
-    Key([mod,"control"],"o", lazy.function(window_to_previous_screen, switch_screen=True)),
+
+    Key(["control", mod], "l", next_workspace),
+    Key(["control", mod], "h", previous_workspace),
+    Key(["control", mod, "shift"], "l", to_next_workspace),
+    Key(["control", mod, "shift"], "h", to_previous_workspace),
+
+#    Key([mod,"control"],"i",  lazy.function(window_to_next_screen, switch_screen=False)),
+#    Key([mod,"control"],"o", lazy.function(window_to_previous_screen, switch_screen=False)),
 
     # Back and forth
     Key([mod],"Tab", lazy.function(back_and_forth)),
 
     # Resize Windows
-    Key([mod, "control"], "h", lazy.layout.grow_left(), desc="Grow window to the left"),
-    Key([mod, "control"], "l", lazy.layout.grow_right(), desc="Grow window to the right"),
-    Key([mod, "control"], "j", lazy.layout.grow_down(), desc="Grow window down"),
-    Key([mod, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
-    Key([mod], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
+    #Key([mod, "ISO_Level3_Shift"], "h", lazy.layout.grow_left(), desc="Grow window to the left"),
+    #Key([mod, "ISO_Level3_Shift"], "l", lazy.layout.grow_right(), desc="Grow window to the right"),
+    #Key([mod, "ISO_Level3_Shift"], "j", lazy.layout.grow_down(), desc="Grow window down"),
+    #Key([mod, "ISO_Level3_Shift"], "k", lazy.layout.grow_up(), desc="Grow window up"),
+    #Key([mod], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
 
     # Toggle floating
     Key([mod, "control"], "f", lazy.window.toggle_floating()),
@@ -156,25 +144,43 @@ keys = [
     # Rofi apps launcher
     Key([mod], "space", lazy.spawn("rofi -show-icons -location 0 -show drun -sidebar-mode -columns")),
 
+    # Rofi power menu
+    Key([mod], "x", lazy.spawn("rofi -show power-menu -modi power-menu:rofi-power-menu")),
+
     # Volume controls
     Key([mod], "u", lazy.spawn('pactl set-sink-volume 0 +5%')),
     Key([mod], "y", lazy.spawn('pactl set-sink-volume 0 -5%')),
 
-    # Media controls
-    #Key([mod], "ç", lazy.spawn('playerctl previous')),
-    #Key([mod], "à", lazy.spawn('playerctl next')),
 
-    # Emoji Rofi launcher
-    #Key([mod], "o", lazy.spawn('rofi -show emoji -modi emoji')),
-
-    # Discord
-    Key([mod], "d", lazy.spawn("discord")),
+    # dmenu
+    Key([mod], "d", lazy.spawn("dmenu_run")),
 
     # file_manager
     Key([mod], "f", lazy.spawn(file_manager)),
 
     # Browser
     Key([mod], "b", lazy.spawn(browser)),
+
+    # ------------ Hardware Configs ------------
+    # Volume
+    Key([], "XF86AudioLowerVolume", lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%")),
+    Key([], "XF86AudioRaiseVolume", lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%")),
+    Key([], "XF86AudioMute", lazy.spawn("pactl set-sink-mute @DEFAULT_SINK@ toggle")),
+
+    # Brightness
+    Key([], "XF86MonBrightnessUp", lazy.spawn("brightnessctl set +5%")),
+    Key([], "XF86MonBrightnessDown", lazy.spawn("brightnessctl set 5%-")),
+    # power menu
+    Key([mod, 'control'], 'x', lazy.run_extension(extension.CommandSet(
+    commands={
+        'suspend': 'systemctl suspend',
+        'shutdown': 'systemctl poweroff',
+        'reboot': 'systemctl reboot',
+        'logout': 'loginctl terminate-session $XDG_SESSION_ID',
+        'lock': 'loginctl lock-session',
+    },
+    dmenu_prompt='session>',
+    )), desc='List options to quit the session.'),
 ]
 ###################
 ## groups config ##
@@ -203,10 +209,10 @@ for i in groups:
     keys.extend([
         # CHANGE WORKSPACES
         Key([mod], i.name, lazy.group[i.name].toscreen()),
-        #Key([mod], "Tab", lazy.screen.next_group()),
-        #Key([mod, "shift"], "Tab", lazy.screen.prev_group()),
-        Key([mod, "shift"], i.name, lazy.window.togroup(
-            i.name), lazy.group[i.name].toscreen()),
+        # switch to group
+        Key([mod, "shift"], i.name, lazy.window.togroup(i.name), lazy.group[i.name].toscreen()),
+        # do not switch to group
+        Key([mod, "shift"], i.name, lazy.window.togroup(i.name))
     ])
 
 
@@ -233,7 +239,7 @@ layouts = [
 widget_defaults = dict(
     font='Source Code Pro',
     fontsize=18,
-    padding=8,
+    padding=4,
 )
 extension_defaults = widget_defaults.copy()
 
@@ -257,28 +263,38 @@ screens = [
                     background=palette.DARK,
                     hide_unused=True
                 ),
-                widget.Spacer(),
+                #widget.Spacer(),
                 widget.WindowName(
                     format='{name}'
                 ),
                 widget.Systray(),
+                widget.Volume(
+                    fmt = "[VOL:{}]"
+                ),
                 widget.CPU(
-                    format = "CPU:{load_percent}%"
+                    format = "[CPU:{load_percent}%]"
                 ),
                 widget.Memory(
-                    format = "RAM:{MemUsed:.0f}M",
+                    format = "[RAM:{MemUsed:.0f}M]",
                 ),
                 widget.DF(
-                    format = "SPACE:{uf}{m}",
+                    format = "[SPACE:{uf}{m}]",
+                    partition = "/home",
                     measure = "G",
                     visible_on_warn=False
                 ),
-                widget.Volume(
+                widget.Backlight(
+                    brightness_file = "/sys/class/backlight/intel_backlight/brightness",
+                    max_brightness_file = "/sys/class/backlight/intel_backlight/max_brightness",
+                    fmt = "[SCREEN:{}]"
                 ),
-                widget.Clock(format='%H:%M',
-                    padding=10,
+                widget.Battery(
+                    format = "[BATT:{percent:2.0%}]"
                 ),
-                 widget.CurrentScreen(),
+                widget.Clock(
+                    format='[TIME:%H:%M]'
+                ),
+                widget.CurrentScreen(),
             ],
             35,
             margin=[10, 10, 10, 10],
@@ -310,7 +326,7 @@ if num_monitors > 1:
                             background=palette.DARK,
                             hide_unused=True
                         ),
-                        widget.Spacer(),
+                        #widget.Spacer(),
                         widget.WindowName(
                             format='{name}'
                         ),
