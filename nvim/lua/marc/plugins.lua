@@ -59,6 +59,8 @@ require("lazy").setup({
   },
   -- auto pairing
   { 'echasnovski/mini.pairs',               version = false },
+  -- terminal
+    {'akinsho/toggleterm.nvim',             version = "*", config = true},
   -- bufferline
   { 'akinsho/bufferline.nvim',              version = "*",
     dependencies = {
@@ -84,6 +86,8 @@ require("lazy").setup({
     dependencies = {
       "hrsh7th/cmp-nvim-lsp",
       "L3MON4D3/LuaSnip",
+      "hrsh7th/cmp-path",
+      "hrsh7th/cmp-cmdline",
       "saadparwaiz1/cmp_luasnip",
       "hrsh7th/cmp-buffer"
     },

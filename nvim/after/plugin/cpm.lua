@@ -1,6 +1,13 @@
 local status, cmp = pcall(require, "cmp")
 if (not status) then return end
-local luasnip = require 'luasnip'
+
+local status2, luasnip = pcall(require, 'luasnip')
+if (not status2) then return end
+
+local check_backspace = function ()
+  local col = vim.fn.col "." -1
+  return col == 0 or vim.fn.getline("."):sub(col, col):match "%s"
+end
 
 cmp.setup({
   snippet = {
@@ -9,8 +16,10 @@ cmp.setup({
     end,
   },
   mapping = cmp.mapping.preset.insert({
+    ['<C-k>'] = cmp.mapping.select_prev_item(),
+    ['<C-j>'] = cmp.mapping.select_next_item(),
     ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-u>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete(),
     ['<C-e>'] = cmp.mapping.close(),
     ['<CR>'] = cmp.mapping.confirm({
@@ -22,6 +31,8 @@ cmp.setup({
         cmp.select_next_item()
       elseif luasnip.expand_or_jumpable() then
         luasnip.expand_or_jump()
+      elseif check_backspace then
+        fallback()
       else
         fallback()
       end
@@ -43,3 +54,8 @@ cmp.setup({
     { name = 'buffer' },
   }),
 })
+vim.cmd [[
+  set completeopt=menuone,noinsert,noselect
+  highlight! default link CmpItemKind CmpItemMenuDefault
+]]
+
