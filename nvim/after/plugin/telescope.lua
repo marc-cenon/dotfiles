@@ -3,6 +3,8 @@ local status2, actions = pcall(require, "telescope.actions")
 
 if (not status and status2) then return end
 
+local fb_actions = require "telescope".extensions.file_browser.actions
+
 telescope.load_extension("file_browser")
 telescope.load_extension('dap')
 telescope.setup {
@@ -14,13 +16,11 @@ telescope.setup {
     },
     mappings = {
       i = {
+        ["<C-w>"] = function() vim.cmd('normal vbd') end,
         ["<esc>"] = actions.close,
         ["<C-a>"] = actions.toggle_selection,
         ["<Tab>"] = actions.move_selection_next,
         ["<S-Tab>"] = actions.move_selection_previous,
-        -- doesn't work for some reason
-        -- ["<Down>"] = actions.toggle_selection + actions.move_selection_worse,
-        -- ["<Up>"] = actions.toggle_selection + actions.move_selection_better,
       },
     },
   },

@@ -10,7 +10,7 @@ end
 vim.g.mapleader = " "
 
 -- menu
-Map("n", "<leader>m", vim.cmd.Ex)
+Map("n", "<leader>m", vim.cmd.Vex)
 
 -- movement
 Map("n", "<C-h>", "<C-w>h")
@@ -63,7 +63,7 @@ Map('n', '<leader>tt', ':silent !tmux split-window -dh <CR>')
 -- telescope plugin
 Map("n", "<leader>ff", "<cmd> Telescope find_files <CR>")
 Map("n", "<leader>fa", "<cmd> Telescope find_files follow=true no_ignore=true hidden=true <CR>")
-Map("n", "<leader>fe", "<cmd> Telescope file_browser hidden=true <CR>")
+Map("n", "<leader>fe", "<cmd> Telescope file_browser hidden=true initial_mode=normal <CR>")
 Map("n", "<leader>fw", "<cmd> Telescope live_grep <CR>")
 Map("n", "<leader>fb", "<cmd> Telescope buffers <CR>")
 Map("n", "<leader>fh", "<cmd> Telescope help_tags <CR>")
