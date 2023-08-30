@@ -29,3 +29,5 @@ if ! tmux has-session -t=$selected_name 2> /dev/null; then
 fi
 
 tmux switch-client -t $selected_name
+
+#test git stash 2
