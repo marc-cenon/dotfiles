@@ -1,11 +1,20 @@
+-- global neovim conf
 
---------------------------- global nvm conf
+--  share clipboard
 vim.api.nvim_set_option("clipboard","unnamed")
 
-vim.g.netrw_winsize = 30
+-- turn off paste mode when leaving insert
+vim.api.nvim_create_autocmd("InsertLeave", {
+	pattern = "*",
+	command = "set nopaste",
+})
+
+-- vim.g.loaded_netrw = 0
+-- vim.g.loaded_netrwPlugin = 0
+-- custom conf
 
 local opt = vim.opt
-
+opt.signcolumn = "yes"
 opt.swapfile = false
 opt.backup = false
 opt.undofile = true
@@ -15,8 +24,9 @@ opt.ruler = true
 opt.number = true
 opt.relativenumber = true
 opt.numberwidth = 2
-opt.listchars = { tab = '│ ', eol = '↩', trail = '•', space = '⋅', precedes = '←', extends = '→' }
+opt.listchars = { tab = '│ ', eol = '↩', trail = '•', precedes = '←', extends = '→' }
 opt.mouse = "a"
+opt.mousemev = true
 opt.wrap = true
 opt.colorcolumn = "80"
 opt.expandtab = true
@@ -36,4 +46,5 @@ opt.showcmd = true
 opt.cmdheight = 1
 opt.autoindent = true
 opt.smartindent = true
+opt.completeopt = 'menuone,noselect'
 

@@ -1,0 +1,48 @@
+-- https://github.com/nvimtools/none-ls.nvim/issues/58
+return {
+  "nvimtools/none-ls.nvim",
+  dependencies = {
+    "nvimtools/none-ls-extras.nvim",
+  },
+  config = function()
+    local null_ls = require("null-ls")
+    local formatting = null_ls.builtins.formatting -- to setup formatters
+    local diagnostics = null_ls.builtins.diagnostics -- to setup linters
+
+    null_ls.setup({
+      sources = {
+
+        formatting.stylua, -- lua formater
+        diagnostics.selene, -- lua linter
+        -- python
+        diagnostics.pylint, -- python linter
+        formatting.black, -- python formater
+        formatting.isort, -- python lib /utility for imports
+
+        -- diagnostics.tfsec,        -- terraform linter, use trivy tfsec bin, need to be installed
+        formatting.terraform_fmt, -- terraform formater, use terraform bin
+        -- yaml
+        diagnostics.yamllint.with({
+          args = {
+            "--format",
+            "parsable",
+            "-",
+            "-d",
+            "{extends: relaxed, rules: {line-length: {max: 120}}}",
+          },
+        }),                  -- yaml linter
+        formatting.yamlfmt,  -- yaml formater
+        --- miscs
+        diagnostics.ansiblelint, -- ansible linter
+        diagnostics.jsonlint, -- json linter
+      },
+    })
+
+    function Try_format()
+      vim.lsp.buf.format()
+      print("formating with none-ls")
+    end
+
+    vim.api.nvim_set_keymap("n", "<Leader>gf", "<cmd> lua Try_format()<CR>", { noremap = true })
+  end,
+}

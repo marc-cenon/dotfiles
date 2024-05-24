@@ -1,0 +1,13 @@
+return {
+  "folke/which-key.nvim",
+  event = "VeryLazy",
+  config = function()
+    vim.o.timeout = true
+    vim.o.timeoutlen = 3500
+    require("which-key").setup({
+      window = {
+        border = "single", -- none, single, double, shadow
+      },
+    })
+  end,
+}
